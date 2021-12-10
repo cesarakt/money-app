@@ -14,7 +14,7 @@
 #### Clone este repositório
 
 ```bash
-git clone https://github.com/cesarakt/App-Finan-as.git
+git clone https://github.com/cesarakt/money-app.git
 ```
 
 #### Instale as dependências
