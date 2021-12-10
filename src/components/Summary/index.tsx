@@ -6,9 +6,27 @@ import { useContext } from 'react'
 import { TransactionsContext } from '../../TransactionsContext'
 
 export function Summary() {
-  const { transactions } = useContext(TransactionsContext)
+  const { transactions, formatCurrency } = useContext(TransactionsContext)
 
-  console.log(transactions)
+  const summary = transactions.reduce(
+    (accumulator, transaction) => {
+      if (transaction.type === 'deposit') {
+        accumulator.deposits += transaction.amount
+        accumulator.total += transaction.amount
+      } else {
+        accumulator.withdraws += transaction.amount
+        accumulator.total -= transaction.amount
+      }
+
+      return accumulator
+    },
+    {
+      deposits: 0,
+      withdraws: 0,
+      total: 0
+    }
+  )
+
   return (
     <Container>
       <div>
@@ -16,7 +34,7 @@ export function Summary() {
           <p>Entradas</p>
           <img src={income} alt="entradas" />
         </header>
-        <strong>R$1000,00</strong>
+        <strong>{formatCurrency(summary.deposits)}</strong>
       </div>
 
       <div>
@@ -24,7 +42,7 @@ export function Summary() {
           <p>Saídas</p>
           <img src={outcome} alt="saidas" />
         </header>
-        <strong>- R$500,00</strong>
+        <strong>- {formatCurrency(summary.withdraws)}</strong>
       </div>
 
       <div className="highlight-background">
@@ -32,7 +50,7 @@ export function Summary() {
           <p>Total</p>
           <img src={total} alt="total" />
         </header>
-        <strong>R$500,00</strong>
+        <strong>{formatCurrency(summary.total)}</strong>
       </div>
     </Container>
   )

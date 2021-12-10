@@ -19,6 +19,7 @@ interface TransactionsProviderProps {
 interface TransactionContextData {
   transactions: Transaction[]
   createTransaction: (transaction: TransactionInput) => Promise<void>
+  formatCurrency: (currency: number) => string
 }
 
 export const TransactionsContext = createContext<TransactionContextData>(
@@ -45,8 +46,19 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
     setTransactions([...transactions, transaction])
   }
 
+  function formatCurrency(currency: number) {
+    const formattedCurrency = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(currency)
+
+    return formattedCurrency
+  }
+
   return (
-    <TransactionsContext.Provider value={{ transactions, createTransaction }}>
+    <TransactionsContext.Provider
+      value={{ transactions, createTransaction, formatCurrency }}
+    >
       {children}
     </TransactionsContext.Provider>
   )
